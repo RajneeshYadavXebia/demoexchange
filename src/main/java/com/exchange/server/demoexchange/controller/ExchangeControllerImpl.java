@@ -1,14 +1,18 @@
 package com.exchange.server.demoexchange.controller;
 
 import com.exchange.server.demoexchange.Service.ExchangeService;
+import com.exchange.server.demoexchange.entity.StockEntity;
 import com.exchange.server.demoexchange.model.Stock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -28,6 +32,11 @@ public class ExchangeControllerImpl implements ExchangeController {
     }
 
     @Override
+    public Stock getStockById(@PathVariable("id") String stockId) {
+        return exchangeService.getStockById(stockId);
+    }
+
+    @Override
     public String createStock(@RequestBody Stock stock) {
         logger.info("Inside ExchangeControllerImpl createStock method");
         if (null != stock && !StringUtils.isEmpty(stock.getStockId())
@@ -42,10 +51,14 @@ public class ExchangeControllerImpl implements ExchangeController {
         return "Give Valid Info";
     }
 
+    @Override
+    public String saveStock(@RequestBody Stock stock) {
+        return exchangeService.saveStockEntity(stock);
+    }
 
     @Override
     public Stock updateStock(@RequestBody Stock stock) {
-        logger.info("Inside ExchangeControllerImpl updateStock method");
+        logger.info("Inside Exc8hangeControllerImpl updateStock method");
 
         if (null != stock && !StringUtils.isEmpty(stock.getStockId())
                 && !StringUtils.isEmpty(stock.getCompanyName())
@@ -54,7 +67,6 @@ public class ExchangeControllerImpl implements ExchangeController {
         }
         logger.info("Exiting ExchangeControllerImpl updateStock method");
         return stock;
-
     }
 
 }

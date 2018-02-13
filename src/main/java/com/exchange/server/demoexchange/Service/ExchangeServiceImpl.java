@@ -1,5 +1,6 @@
 package com.exchange.server.demoexchange.Service;
 
+import com.exchange.server.demoexchange.Repository.StockEntityRepository;
 import com.exchange.server.demoexchange.dao.ExchangeDao;
 import com.exchange.server.demoexchange.entity.StockEntity;
 import com.exchange.server.demoexchange.model.Stock;
@@ -8,11 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ExchangeServiceImpl implements ExchangeService{
 
     @Autowired
     private ExchangeDao stockDao;
+
+    @Autowired
+    StockEntityRepository stockEntityR;
 
     public static final Logger logger = LoggerFactory.getLogger(ExchangeServiceImpl.class);
 
@@ -20,6 +26,23 @@ public class ExchangeServiceImpl implements ExchangeService{
     public Stock getStock(String stockId) {
         StockEntity stockEntity =  stockDao.getStockById(stockId);
         return mapEntityToModel(stockEntity);
+    }
+
+    @Override
+    public Stock getStockById(String id){
+        return mapEntityToModel(stockEntityR.findOne(id));
+    }
+
+    @Override
+    public String saveStockEntity(Stock stock) {
+        StockEntity stockEntity = mapModelToEntity(stock);
+        stockEntity= stockEntityR.save(stockEntity);
+        /*if(stockEntity.getStockId()!=null){
+            return "Data save To DB";
+        }else{
+            return "Data not save to DB";
+        }*/
+        return "Data save To DB";
     }
 
     @Override
